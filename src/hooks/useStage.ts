@@ -1,10 +1,8 @@
 import { createStage } from "../gameHelpers";
 // Types
 import { useEffect, useState } from "react";
-import { STAGECELL } from "../components/Stage/Stage";
+import { STAGE, STAGECELL } from "../components/Stage/Stage";
 import type { PLAYER } from "./usePlayer";
-
-export type STAGE = STAGECELL[][];
 
 export const useStage = (player: PLAYER, resetPlayer: () => void) => {
   const [stage, setStage] = useState(createStage());
