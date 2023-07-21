@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { STAGE } from "../components/Stage/Stage";
-import { randomTetromino } from "../gameHelpers";
+import { isColliding, randomTetromino } from "../gameHelpers";
 import { STAGE_WIDTH, TETROMINOTYPE } from "../setup";
 
 export type PLAYER = {
@@ -25,6 +25,19 @@ export const usePlayer = () => {
   const playerRotate = (stage: STAGE): void => {
     const clonedPlayer = JSON.parse(JSON.stringify(player));
     clonedPlayer.tetromino = rotate(clonedPlayer.tetromino);
+
+    // This one is so the player can't rotate into the walls on other tetrominos that's merged
+    const posX = clonedPlayer.pos.x;
+    let offset = 1;
+    while (isColliding(clonedPlayer, stage, { x: 0, y: 0 })) {
+      clonedPlayer.pos.x += offset;
+      offset = -(offset + (offset > 0 ? 1 : -1));
+
+      if (offset > clonedPlayer.tetromino[0].length) {
+        clonedPlayer.pos.x = posX;
+        return;
+      }
+    }
 
     setPlayer(clonedPlayer);
   };
